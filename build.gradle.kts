@@ -3,8 +3,8 @@ plugins {
 
     // This uses the nexus publishing plugin to publish to the moderne-dev repository
     // Remove it if you prefer to publish by other means, such as the maven-publish plugin
-    id("org.openrewrite.build.publish") version "latest.release"
-    id("nebula.release") version "latest.release"
+    //id("org.openrewrite.build.publish") version "latest.release"
+    //id("nebula.release") version "latest.release"
 
     // Configures artifact repositories used for dependency resolution to include maven central and nexus snapshots.
     // If you are operating in an environment where public repositories are not accessible, we recommend using a
@@ -14,6 +14,14 @@ plugins {
     // Only needed when you want to apply the OpenRewriteBestPractices recipe to your recipes through
     // ./gradlew rewriteRun -Drewrite.activeRecipe=org.openrewrite.recipes.OpenRewriteBestPractices
     id("org.openrewrite.rewrite") version "latest.release"
+}
+
+val artifactoryUrl       = project.findProperty("artifactoryUrl")      as String
+val scriptPluginVersion  = project.findProperty("scriptPluginVersion") as String
+val artifactoryPluginUrl = "$artifactoryUrl/artifactory/simple/plugins-release-local/com/castlight/gradle/standard-starter/$scriptPluginVersion"
+
+apply {
+    from("${artifactoryPluginUrl}/publish-starter-${scriptPluginVersion}.gradle")
 }
 
 // Set as appropriate for your organization
@@ -56,6 +64,7 @@ dependencies {
     rewrite("org.openrewrite.recipe:rewrite-recommendations:latest.release")
 }
 
+/*
 signing {
     // To enable signing have your CI workflow set the "signingKey" and "signingPassword" Gradle project properties
     isRequired = false
@@ -82,3 +91,4 @@ publishing {
       }
   }
 }
+*/
