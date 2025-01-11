@@ -18,6 +18,7 @@ recipeList:
 type: specs.openrewrite.org/v1beta/recipe
 name: com.castlight.openrewrite.MigratePackageReferences
 displayName: Rename package names
+description: Replaces a specific package.
 recipeList:
   - org.openrewrite.java.ChangePackage:
       oldPackageName: net.thucydides.core.annotations
@@ -28,6 +29,7 @@ recipeList:
 type: specs.openrewrite.org/v1beta/recipe
 name: com.castlight.openrewrite.FindAndReplaceText
 displayName: Find and replace example
+description: Replaces a specific package.
 recipeList:
   - org.openrewrite.text.FindAndReplace:
       find: org.springframework.util.SocketUtils
@@ -41,6 +43,7 @@ recipeList:
 type: specs.openrewrite.org/v1beta/recipe
 name: com.castlight.openrewrite.ReplaceTypeAnnotation
 displayName: Replace annotation example
+description: Replaces a specific annotation.
 recipeList:
   - org.openrewrite.java.ReplaceAnnotation:
       annotationPatternToReplace: '@org.hibernate.annotations.Type(type = "text")'
@@ -50,7 +53,7 @@ recipeList:
 type: specs.openrewrite.org/v1beta/recipe
 name: com.castlight.openrewrite.FixRemovedClassReferences
 displayName: Replace Removed class with something else
-description: Replace Removed class with something else
+description: Replace Removed class with something else.
 recipeList:
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.springframework.util.SocketUtils

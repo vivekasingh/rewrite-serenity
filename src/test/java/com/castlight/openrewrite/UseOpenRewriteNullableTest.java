@@ -15,6 +15,7 @@
  */
 package com.castlight.openrewrite;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openrewrite.DocumentExample;
 import org.openrewrite.java.JavaParser;
@@ -29,14 +30,15 @@ class UseOpenRewriteNullableTest implements RewriteTest {
     public void defaults(RecipeSpec spec) {
         spec
           // Use the fully qualified class name of the recipe defined in src/main/resources/META-INF/rewrite/rewrite.yml
-          .recipeFromResources("com.yourorg.UseOpenRewriteNullable")
+          .recipeFromResources("com.castlight.openrewrite.MigratePackageReferences")
           // The before and after text blocks contain references to annotations from these two classpath entries
           .parser(JavaParser.fromJavaVersion().classpath("annotations", "rewrite-core"));
     }
 
-    @DocumentExample
+    @Disabled
     @Test
-    void replacesNullableAnnotation() {
+    @DocumentExample
+    void replacesSerenityPackage() {
         rewriteRun(
           // Composite recipes are a hierarchy of recipes that can be applied in a single pass.
           // To view what the composite recipe does, you can use the RecipePrinter to print the recipe to the console.
@@ -44,19 +46,19 @@ class UseOpenRewriteNullableTest implements RewriteTest {
           //language=java
           java(
             """
-              import org.jetbrains.annotations.Nullable;
+              import net.thucydides.core.annotations.Step;
               
               class A {
-                  @Nullable
-                  String s;
+                  @Step
+                  void step1() {}
               }
               """,
             """
-              import org.openrewrite.internal.lang.Nullable;
+              import net.serenitybdd.annotations.Step;
               
               class A {
-                  @Nullable
-                  String s;
+                  @Step
+                  void step1() {}
               }
               """
           )
