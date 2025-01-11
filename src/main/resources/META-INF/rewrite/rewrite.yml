@@ -1,19 +1,3 @@
-#
-# Copyright 2021 the original author or authors.
-# <p>
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-# <p>
-# https://www.apache.org/licenses/LICENSE-2.0
-# <p>
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-
 # Include any Declarative YAML format recipes here, as per:
 # https://docs.openrewrite.org/reference/yaml-format-reference
 # These are most easily composed through the Yaml recipe builder at:
@@ -23,27 +7,28 @@
 # You can also have multiple files in `src/main/resources/META-INF/rewrite`, each containing one or more recipes.
 ---
 type: specs.openrewrite.org/v1beta/recipe
-name: com.castlight.openrewrite.ChangeSerenityType
-displayName: Replace serenity imports with new org
-description: Replace serenity imports with new org
+name: com.castlight.openrewrite.UpdateGradleWrapper
+displayName: Update Gradle Wrapper
+description: Updates the Gradle Wrapper to the latest version or a specified version.
 recipeList:
-  - org.openrewrite.java.ChangeType:
-      oldFullyQualifiedTypeName: net.thucydides.core.annotations.Steps
-      newFullyQualifiedTypeName: net.serenitybdd.annotations.Steps
+  - org.openrewrite.gradle.UpdateGradleWrapper:
+      wrapperUri: https://artifactory.castlighthealth.com/artifactory/gradle-distributions/gradle-8.12-bin.zip
 
-  - org.openrewrite.java.ChangeType:
-      oldFullyQualifiedTypeName: net.thucydides.core.annotations.Step
-      newFullyQualifiedTypeName: net.serenitybdd.annotations.Step
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.castlight.openrewrite.MigratePackageReferences
+displayName: Rename package names
+recipeList:
+  - org.openrewrite.java.ChangePackage:
+      oldPackageName: net.thucydides.core.annotations
+      newPackageName: net.serenitybdd.annotations
+      recursive: true
 
 ---
 type: specs.openrewrite.org/v1beta/recipe
 name: com.castlight.openrewrite.FindAndReplaceText
 displayName: Find and replace example
 recipeList:
-  - org.openrewrite.text.FindAndReplace:
-      find: net.thucydides.core.annotations
-      replace: net.serenitybdd.annotations
-      filePattern: '**/*.java'
   - org.openrewrite.text.FindAndReplace:
       find: org.springframework.util.SocketUtils
       replace: org.springframework.test.util.TestSocketUtils
@@ -52,3 +37,21 @@ recipeList:
       find: SocketUtils.findAvailableTcpPort()
       replace: TestSocketUtils.findAvailableTcpPort()
       filePattern: '**/*.java'
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.castlight.openrewrite.ReplaceTypeAnnotation
+displayName: Replace annotation example
+recipeList:
+  - org.openrewrite.java.ReplaceAnnotation:
+      annotationPatternToReplace: '@org.hibernate.annotations.Type(type = "text")'
+      annotationTemplateToInsert: '@org.hibernate.annotations.JdbcTypeCode(java.sql.Types.LONGVARCHAR)'
+
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.castlight.openrewrite.FixRemovedClassReferences
+displayName: Replace Removed class with something else
+description: Replace Removed class with something else
+recipeList:
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.springframework.util.SocketUtils
+      newFullyQualifiedTypeName: org.springframework.test.util.TestSocketUtils
