@@ -22,16 +22,13 @@ val artifactoryPluginUrl = "$artifactoryUrl/artifactory/simple/plugins-release-l
 
 apply {
     from("${artifactoryPluginUrl}/publish-starter-${scriptPluginVersion}.gradle")
+    from("${artifactoryPluginUrl}/release-starter-${scriptPluginVersion}.gradle")
 }
-
-// Set as appropriate for your organization
-group = "com.castlight.openrewrite"
-description = "Rewrite recipes."
 
 dependencies {
     // The bom version can also be set to a specific version
     // https://github.com/openrewrite/rewrite-recipe-bom/releases
-    implementation(platform("org.openrewrite.recipe:rewrite-recipe-bom:latest.release"))
+    implementation(platform("org.openrewrite.recipe:rewrite-recipe-bom:3.0.0"))
 
     implementation("org.openrewrite:rewrite-java")
     implementation("org.openrewrite.recipe:rewrite-java-dependencies")
@@ -44,6 +41,7 @@ dependencies {
     // https://github.com/openrewrite/rewrite-templating/releases
     annotationProcessor("org.openrewrite:rewrite-templating:latest.release")
     implementation("org.openrewrite:rewrite-templating")
+
     // The `@BeforeTemplate` and `@AfterTemplate` annotations are needed for refaster style recipes
     compileOnly("com.google.errorprone:error_prone_core:latest.release") {
         exclude("com.google.auto.service", "auto-service-annotations")
@@ -63,32 +61,3 @@ dependencies {
     // Contains the OpenRewriteBestPractices recipe, which you can apply to your recipes
     rewrite("org.openrewrite.recipe:rewrite-recommendations:latest.release")
 }
-
-/*
-signing {
-    // To enable signing have your CI workflow set the "signingKey" and "signingPassword" Gradle project properties
-    isRequired = false
-}
-
-// Use maven-style "SNAPSHOT" versioning for non-release builds
-configure<nebula.plugin.release.git.base.ReleasePluginExtension> {
-    defaultVersionStrategy = nebula.plugin.release.NetflixOssStrategies.SNAPSHOT(project)
-}
-
-configure<PublishingExtension> {
-    publications {
-        named("nebula", MavenPublication::class.java) {
-            suppressPomMetadataWarningsFor("runtimeElements")
-        }
-    }
-}
-
-publishing {
-  repositories {
-      maven {
-          name = "moderne"
-          url = uri("https://us-west1-maven.pkg.dev/moderne-dev/moderne-recipe")
-      }
-  }
-}
-*/
